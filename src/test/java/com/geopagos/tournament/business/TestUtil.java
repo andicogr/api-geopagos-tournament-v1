@@ -2,7 +2,9 @@ package com.geopagos.tournament.business;
 
 import com.geopagos.tournament.model.domain.Gender;
 import com.geopagos.tournament.model.domain.Player;
+import com.geopagos.tournament.model.thridparty.api.PlayerResponse;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -32,6 +34,26 @@ public class TestUtil {
         return players;
     }
 
+    public static List<PlayerResponse> buildRandomPlayerResponseList(com.geopagos.tournament.model.thridparty.api.Gender gender, Integer quantity) {
+
+        List<PlayerResponse> players = new ArrayList<>();
+
+        for (int i = 0; i < quantity; i++) {
+            PlayerResponse player = new PlayerResponse();
+            player.setId("000009999" + i);
+            player.setGender(gender);
+            player.setName("Player" + i);
+            player.setAbility(BigDecimal.valueOf(getRandomStatistic()));
+            player.setSpeed(BigDecimal.valueOf(getRandomStatistic()));
+            player.setReactionTime(BigDecimal.valueOf(getRandomStatistic()));
+            player.setStrength(BigDecimal.valueOf(getRandomStatistic()));
+
+            players.add(player);
+        }
+
+        return players;
+    }
+
     public static Player buildRandomParticipant(Gender gender) {
 
         long uniqueValue = LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond();
@@ -50,6 +72,10 @@ public class TestUtil {
     public static int getRandomStatistic() {
         Random r = new Random();
         return r.nextInt(100) + 1;
+    }
+
+    public static String getUniqueValue() {
+        return String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond());
     }
 
 }

@@ -12,7 +12,7 @@ public class RecordNotFoundException extends RuntimeException {
 
     public RecordNotFoundException() {
         this.code = "00090";
-        this.description = "The record was not found ";
+        this.description = "The record was not found";
     }
 
 }
