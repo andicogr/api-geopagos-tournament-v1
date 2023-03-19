@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Tennis Tournament
+  description: |-
+    This API let you register the tournament participants and run the tournament to get the winner
+  contact:
+    email: agonzalesr93@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: https://geopagos.com/api/v1
+tags:
+  - name: Tournament
+paths:
+  /tournaments:
+    get:
+      tags:
+        - Tournament
+      summary: Start the tournament and give the result of it
+      operationId: getTournaments
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+          description: Tournament Day
+        - in: query
+          name: gender
+          schema:
+            $ref: '#/components/schemas/Gender'
+          description: Gender Tournament
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TournamentsResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+  /tournaments/{tournamentId}:
+    get:
+      tags:
+        - Tournament
+      summary: Find Tournament by Id
+      operationId: findTournament
+      parameters:
+        - in: path
+          name: tournamentId
+          description: Tournament Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TournamentResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+  /tournaments/start:
+    post:
+      tags:
+        - Tournament
+      summary: Start the tournament and give the result of it
+      operationId: startTournament
+      requestBody:
+        description: Tournament configurations
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TournamentStartRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TournamentResultResponse'
+        '412':
+          description: The number must be a power of two (2)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+
+components:
+  schemas:
+    TournamentStartRequest:
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/Gender'
+        extra-attributes-to-eval:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attributes'
+          example: [STRENGTH, SPEED, REACTION_TIME]
+        participants:
+          type: array
+          items:
+            type: string
+    TournamentResultResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        winner:
+          $ref: '#/components/schemas/PlayerResponse'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attributes'
+          example: [ STRENGTH, SPEED, REACTION_TIME ]
+        levels:
+          type: array
+          items:
+            $ref: '#/components/schemas/TournamentLevelResponse'
+    TournamentsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          example: 12-03-2023
+        participants:
+          type: integer
+          example: 32
+        gender:
+          $ref: '#/components/schemas/Gender'
+        winner:
+          $ref: '#/components/schemas/PlayerResponse'
+    TournamentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          example: 12-03-2023
+        participants:
+          type: integer
+          example: 32
+        gender:
+          $ref: '#/components/schemas/Gender'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attributes'
+          example: [ STRENGTH, SPEED, REACTION_TIME ]
+        winner:
+          $ref: '#/components/schemas/PlayerResponse'
+        levels:
+          type: array
+          items:
+            $ref: '#/components/schemas/TournamentLevelResponse'
+
+    Attributes:
+      type: string
+      enum: [STRENGTH, SPEED, REACTION_TIME]
+    PlayerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: Player Name
+    Gender:
+      type: string
+      enum: [MALE, FEMALE]
+    TournamentMatchResponse:
+      type: object
+      properties:
+        player1:
+          $ref: '#/components/schemas/PlayerResponse'
+        player2:
+          $ref: '#/components/schemas/PlayerResponse'
+        winner:
+          $ref: '#/components/schemas/PlayerResponse'
+    TournamentLevelResponse:
+      type: object
+      properties:
+        level:
+          type: integer
+          example: 5
+        matches:
+          type: array
+          items:
+            $ref: '#/components/schemas/TournamentMatchResponse'
+    ModelApiException:
+      type: object
+      properties:
+        code:
+          type: string
+          example: ERROR-CODE
+        description:
+          type: string
+          example: something is wrong
+        errors:
+          type: array
+          items:
+            type: string
+          example:
+            - some error
+            - another error

@@ -1,0 +1,34 @@
+
+
+spring:
+  application:
+    name: api-tournament-v1
+  cloud:
+    config:
+      uri: http://localhost:8888/config-server/
+      name: api-geopagos-tournament-v1
+  profiles:
+    active: default
+
+server:
+  port: 9930
+
+
+#  data:
+#    mongodb:
+#      host: localhost
+#      port: 27017
+#      database: tournament
+
+
+#application:
+#  tournament:
+#    default-additional-attributes:
+#      MALE:
+#        - STRENGTH
+#        - SPEED
+#      FEMALE:
+#        - REACTION_TIME
+#  http-client:
+#    api-player-v1:
+#      base-url: localhost:9920/api/v1/players

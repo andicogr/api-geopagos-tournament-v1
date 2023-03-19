@@ -1,0 +1,196 @@
+openapi: 3.0.1
+info:
+  title: api-player-v1
+  description: 'This API manages the player information'
+  version: 1.0.0
+servers:
+  - url: https://geopagos/api/v1/
+tags:
+  - name: Player
+    description: Player Management
+paths:
+  /players:
+    get:
+      tags:
+        - Player
+      summary: Find Players
+      operationId: findPlayers
+      parameters:
+        - name: params
+          in: query
+          description: Filter params
+          required: false
+          schema:
+            $ref: '#/components/schemas/PlayerSearchRequest'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlayerResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+    post:
+      tags:
+        - Player
+      summary: Create Players
+      operationId: createPlayer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerRequest'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+  /players/{playerId}:
+    get:
+      tags:
+        - Player
+      summary: Find Player By Id
+      operationId: findPlayerById
+      parameters:
+        - in: path
+          name: playerId
+          description: Player Id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+components:
+  schemas:
+    Gender:
+      type: string
+      enum:
+        - MALE
+        - FEMALE
+
+    PlayerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 0b54da5b-8788-4514-bfd2-b060f228fc15
+        gender:
+          $ref: '#/components/schemas/Gender'
+        name:
+          type: string
+          example: Player Name
+        ability:
+          type: number
+          description: the ability must be between 0 a 100
+          example: 70
+          minimum: 0
+          maximum: 100
+        strength:
+          type: number
+          description: the strength must be between 0 a 100
+          example: 80
+          minimum: 0
+          maximum: 100
+        speed:
+          type: number
+          description: the speed must be between 0 a 100
+          example: 90
+          minimum: 0
+          maximum: 100
+        reaction-time:
+          type: number
+          description: the reaction time must be between 0 a 100
+          example: 90
+          minimum: 0
+          maximum: 100
+
+    PlayerSearchRequest:
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/Gender'
+        name:
+          type: string
+          example: Player Name
+
+    PlayerRequest:
+      type: object
+      properties:
+        gender:
+          $ref: '#/components/schemas/Gender'
+        name:
+          type: string
+          example: Player Name
+        ability:
+          type: number
+          description: the ability must be between 0 a 100
+          example: 70
+          minimum: 0
+          maximum: 100
+        strength:
+          type: number
+          description: the strength must be between 0 a 100
+          example: 80
+          minimum: 0
+          maximum: 100
+        speed:
+          type: number
+          description: the speed must be between 0 a 100
+          example: 90
+          minimum: 0
+          maximum: 100
+        reaction-time:
+          type: number
+          description: the reaction time must be between 0 a 100
+          example: 90
+          minimum: 0
+          maximum: 100
+
+    ModelApiException:
+      type: object
+      properties:
+        code:
+          type: string
+          example: ERROR-CODE
+        description:
+          type: string
+          example: something is wrong
+        errors:
+          type: array
+          items:
+            type: string
+          example:
+            - some error
+            - another error
