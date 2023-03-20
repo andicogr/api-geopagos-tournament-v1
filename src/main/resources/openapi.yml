@@ -40,12 +40,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TournamentsResponse'
-        500:
+        '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ModelApiException'
+              examples:
+                Internal Server Error:
+                  value:
+                    code: '99999'
+                    description: Internal server error
+                    errors: ["Detail 1", "Detail 2"]
   /tournaments/{tournamentId}:
     get:
       tags:
@@ -66,12 +72,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TournamentResponse'
-        500:
-          description: Internal Server Error
+        '404':
+          description: HTTP Status 404
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ModelApiException'
+              examples:
+                Record Not Found Error:
+                  value:
+                    code: '00090'
+                    description: The record was not found
+        '500':
+          description: HTTP Status 500
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelApiException'
+              examples:
+                Internal Server Error:
+                  value:
+                    code: '99999'
+                    description: Internal server error
+                    errors: ["Detail 1", "Detail 2"]
   /tournaments/start:
     post:
       tags:
@@ -93,17 +116,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/TournamentResultResponse'
         '412':
-          description: The number must be a power of two (2)
+          description: HTTP Status 412
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ModelApiException'
-        500:
-          description: Internal Server Error
+              examples:
+                Invalid Tournament Participant Error:
+                  value:
+                    code: "00010"
+                    description: The tournament participants must be power of two, the current Player participants are ${participantsQuantity}
+                Invalid Participants Gender Error:
+                  value:
+                    code: "00050"
+                    description: The tournament participants gender must be the same
+        '500':
+          description: HTTP Status 500
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ModelApiException'
+              examples:
+                Assign Players To Matches Error:
+                  value:
+                    code: '00020'
+                    description: 'Error assigning players to matches'
+                Internal Server Error:
+                  value:
+                    code: '99999'
+                    description: Internal server error
+                    errors: ["Detail 1", "Detail 2"]
 
 components:
   schemas:
