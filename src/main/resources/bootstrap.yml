@@ -1,26 +1,23 @@
 
-
 spring:
   application:
     name: api-tournament-v1
   cloud:
     config:
-      uri: http://localhost:8888/config-server/
+      uri: http://52.152.93.59:8888/config-server/
       name: api-geopagos-tournament-v1
   profiles:
     active: default
-
-server:
-  port: 9930
-
-
 #  data:
 #    mongodb:
 #      host: localhost
 #      port: 27017
+#      uri: mongodb://geopagos-mongodb:KcL4FI1BxfwlPJ3XNkwZXXLzhY8VZWubzQ5WIdvSTTGoG4wjJxky8ev2Fp6fF5AsRwibgYMHRgtlACDbiHASxA==@geopagos-mongodb.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@geopagos-mongodb@
 #      database: tournament
-
-
+#server:
+#  port: 9930
+#
+#
 #application:
 #  tournament:
 #    default-additional-attributes:
